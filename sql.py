@@ -71,6 +71,10 @@ class Identity:
         self.db.update_sql(sql)
         print("delete successful")
 
+    def setroot(self, cardid):
+        sql = "update card set root=1 where cardID = '{}'".format(cardid)
+        self.db.update_sql(sql)
+
 class Books:
     def __init__(self):
         self.db = DB()

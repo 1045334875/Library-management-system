@@ -149,6 +149,7 @@ class CountFrame(Frame): # 继承Frame类
             showinfo('警告！','获取用户数据失败！')
 
         Button(self ,text='删除用户',command=self.deleteuser).pack()
+        Button(self ,text='设置为管理员',command=self.upUserRoot).pack()
 
     def deleteuser(self):
         cardid = 0
@@ -163,6 +164,23 @@ class CountFrame(Frame): # 继承Frame类
             self.tree.delete(curitem)
             print("Delete successful")
             showinfo('提示',"删除用户信息成功！")
+
+    def upUserRoot(self):
+        cardid = 0
+        curitem = self.tree.focus()
+        card = self.tree.item(curitem,option='values')
+        if(card != ''): cardid = card[0]
+        print(cardid)
+        if cardid == 0:
+            showinfo('警告！',"请点击用户信息再进行授权")
+        else: 
+            Identity().setroot(cardid)
+            card = list(card)
+            card[5]=1
+            card = tuple(card)
+            self.tree.item(curitem,values=card)
+            print("Delete successful")
+            showinfo('提示',"用户授权管理员成功！")
 
 
 
