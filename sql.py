@@ -47,8 +47,11 @@ class Identity:
         return res
 
     def changepwd(self, userid, cipher):
+        print(cipher)
         sql = "update card set secret='{}' where cardID = '{}'".format(cipher,userid)
         self.db.update_sql(sql)
+
+        
 
     def register(self, name, work, id, cipher):
 
@@ -67,9 +70,17 @@ class Identity:
         return res
 
     def deleteCard(self, cardid):
-        sql = f"delete from card where cardID = {cardid}"
-        self.db.update_sql(sql)
-        print("delete successful")
+        sql = f'select id from lendrecord where cardID="{cardid}" '
+        lendid = self.db.query_sql(sql)
+        if lendid != ():
+            print(lendid)
+            print("Has record")
+            return 0
+        else:
+            sql = f"delete from card where cardID = {cardid}"
+            self.db.update_sql(sql)
+            print("delete successful")
+            return 1
 
     def setroot(self, cardid):
         sql = "update card set root=1 where cardID = '{}'".format(cardid)
@@ -158,8 +169,15 @@ class Books:
 
 
     def deleteBook(self,bno):
-        sql = f'delete from book where bno={bno}'
-        self.db.update_sql(sql)
+        sql = f"select stock, total from book where bno = {bno}"
+        bookmsg = self.db.query_sql(sql)
+        print(bookmsg)
+        if bookmsg[0]["total"]!=bookmsg[0]["stock"]:
+            return 0
+        else:
+            sql = f'delete from book where bno={bno}'
+            self.db.update_sql(sql)
+            return 1
 
     def allRecord(self):
         sql = "select id, lendrecord.cardID, card.username, lendrecord.bno, book.title, lendDate, backDate from lendrecord, book, card where book.bno=lendrecord.bno and card.cardID=lendrecord.cardID"
@@ -183,5 +201,12 @@ class Books:
 
 
     def deleteRecord(self,id):
-        sql = f'delete from lendrecord where id = {id}'
-        self.db.update_sql(sql)
+        sql = f"select bno from lendrecord where id = {id} and backDate is not null"
+        bnores = self.db.query_sql(sql)
+        print(bnores)
+        if bnores!=():
+            sql = f'delete from lendrecord where id = {id}'
+            self.db.update_sql(sql)
+            return 1
+        else:
+            return 0

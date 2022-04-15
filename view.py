@@ -5,6 +5,7 @@ from tkinter import ttk
 from sql import Books, Identity
 from Loginstate import *
 import hashlib
+import LoginPage
  
 #insert a book
 class InputFrame(Frame): # 继承Frame类 
@@ -287,6 +288,8 @@ class AboutFrame(Frame): # 继承Frame类
         print(userid)
         record_arr = Books().queryAllRecordbyId(userid)
 
+        
+
         try:
             for record in record_arr:
                 values=[]
@@ -306,6 +309,10 @@ class AboutFrame(Frame): # 继承Frame类
 
     def changepwd(self):
         secret = self.password.get()
-        encrypt=hashlib.md5(secret.encode()).hexdigest()
-        Identity().changepwd(1,encrypt)
-        showinfo('提示','密码更改成功')
+        if secret=='':
+            showinfo('警告！','请输入新密码！')
+        else:
+            encrypt=hashlib.md5(secret.encode()).hexdigest()
+            Identity().changepwd(Loginstate().search() ,encrypt)
+            showinfo('提示','密码更改成功')
+

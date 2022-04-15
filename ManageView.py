@@ -97,7 +97,7 @@ class QueryFrame(Frame): # 继承Frame类
         except:
             showinfo('警告！','获取借阅数据失败！')
 
-        Button(self ,text='删除图书',command=self.deleterecord).pack()
+        Button(self ,text='删除借阅记录',command=self.deleterecord).pack()
 
     def deleterecord(self):
         id = 0
@@ -107,9 +107,12 @@ class QueryFrame(Frame): # 继承Frame类
         if id == 0:
             showinfo('警告！',"请点击借阅信息再删除")
         else: 
-            Books().deleteRecord(id)
-            self.tree.delete(curitem)
-            showinfo('提示',"删除借阅信息成功！")
+            res = Books().deleteRecord(id)
+            if res==1:
+                self.tree.delete(curitem)
+                showinfo('提示',"删除借阅信息成功！")
+            else:
+                showinfo('警告！',"删除借阅信息失败，请等待书籍归还再删除")
 
 #show all users 
 class CountFrame(Frame): # 继承Frame类 
@@ -160,10 +163,13 @@ class CountFrame(Frame): # 继承Frame类
         if cardid == 0:
             showinfo('警告！',"请点击用户信息再删除")
         else: 
-            Identity().deleteCard(cardid)
-            self.tree.delete(curitem)
-            print("Delete successful")
-            showinfo('提示',"删除用户信息成功！")
+            res=Identity().deleteCard(cardid)
+            if res==1:
+                self.tree.delete(curitem)
+                print("Delete successful")
+                showinfo('提示',"删除用户信息成功！")
+            else:
+                showinfo('警告！',"请等待用户归还书籍后再删除账户")
 
     def upUserRoot(self):
         cardid = 0
@@ -234,7 +240,10 @@ class AboutFrame(Frame): # 继承Frame类
         if bno == 0:
             showinfo('警告！',"请点击图书信息再删除")
         else: 
-            Books().deleteBook(bno)
-            self.tree.delete(curitem)
-            showinfo('提示',"删除图书信息成功！")
+            res=Books().deleteBook(bno)
+            if res==1:
+                self.tree.delete(curitem)
+                showinfo('提示',"删除图书信息成功！")
+            else:
+                showinfo('警告！',"请等待用户归还后再删除")
 
