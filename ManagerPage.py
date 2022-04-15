@@ -22,18 +22,21 @@ class ManagerPage(object):
         self.root['menu'] = menubar # 设置菜单栏 
 
     def inputData(self): 
+        self.inputPage = InputFrame(self.root)
         self.inputPage.pack() 
         self.queryPage.pack_forget() 
         self.countPage.pack_forget() 
         self.aboutPage.pack_forget() 
 
     def queryData(self): 
+        self.queryPage = QueryFrame(self.root)
         self.inputPage.pack_forget() 
         self.queryPage.pack() 
         self.countPage.pack_forget() 
         self.aboutPage.pack_forget() 
 
     def countData(self): 
+        self.countPage = CountFrame(self.root)
         self.inputPage.pack_forget() 
         self.queryPage.pack_forget() 
         self.countPage.pack() 
@@ -41,6 +44,7 @@ class ManagerPage(object):
 
 
     def aboutDisp(self): 
+        self.aboutPage = AboutFrame(self.root) 
         self.inputPage.pack_forget() 
         self.queryPage.pack_forget() 
         self.countPage.pack_forget() 

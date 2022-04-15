@@ -40,11 +40,18 @@ class Identity:
         print(res)
         return res
 
+    def checkID(self, name):
+        sql = "select cardID from card where userid = '{}'".format(name)
+        res = self.db.query_sql(sql)
+        print(res)
+        return res
+
     def changepwd(self, userid, cipher):
         sql = "update card set secret='{}' where cardID = '{}'".format(cipher,userid)
         self.db.update_sql(sql)
 
     def register(self, name, work, id, cipher):
+
         sql = "insert into card(username, userwork, userid, secret) value('{}','{}','{}','{}')".format(name, work, id, cipher)
         self.db.update_sql(sql)
         print("Insert successful!")
@@ -77,9 +84,6 @@ class Books:
     def allBook(self):
         sql = "select bno, category, title, press, year, author, price, total, stock from book"
         res_book = self.db.query_sql(sql)
-        #for book in res_book:
-            #print(f'编号：{book["bno"]},书名：{book["author"]}')
-        #print(res_book) 
         return res_book
 
     def queryBookbyName(self,name):
@@ -105,9 +109,12 @@ class Books:
         return res_books
 
     def lendBook(self,cardID, bno):
-        sql = f'select id from lendrecord where bno="{bno}" '
+        sql = f'select id from lendrecord where cardID="{cardID}" and bno="{bno}" '
+        lendid=0
         lendid = self.db.query_sql(sql)
-        if lendid != '':
+        if lendid != ():
+            print(lendid)
+            print("Has record")
             return 2
         sql = f'select stock from book where bno="{bno}" '
         stock = self.db.query_sql(sql)

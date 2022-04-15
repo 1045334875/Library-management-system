@@ -78,7 +78,7 @@ class InputFrame(Frame): # 继承Frame类
         if bno == 0:
             showinfo('警告！',"请点击图书信息再借阅")
         else: 
-            res = Books().lendBook(Loginstate().search,bno)
+            res = Books().lendBook(Loginstate().search(),bno)
             if res==1:
                 showinfo('提示',"借阅图书成功！")
                 card = list(card)
@@ -146,9 +146,9 @@ class QueryFrame(Frame): # 继承Frame类
             self.tree.column(column[i],width=100,anchor='center')
         self.tree.place(x=200,y=20,width=900,height=900)
         self.tree.pack()#一定要加这个pack，才能让表格显示出来
-        userid = Loginstate().search
+        userid = Loginstate().search()
         print(userid)
-        record_arr = Books().queryRecordbyId(1)
+        record_arr = Books().queryRecordbyId(userid)
 
         try:
             for record in record_arr:
@@ -232,7 +232,7 @@ class CountFrame(Frame): # 继承Frame类
         if bno == 0:
             showinfo('警告！',"请点击图书信息再借阅")
         else: 
-            res = Books().lendBook(Loginstate().search,bno)
+            res = Books().lendBook(Loginstate().search(),bno)
             if res==1:
                 showinfo('提示',"借阅图书成功！")
                 card = list(card)
@@ -260,14 +260,19 @@ class AboutFrame(Frame): # 继承Frame类
     def createPage(self): 
         self.configure(bg="#fffaf4") 
         Label(self, text='个人信息', font=("华文行楷", 20), fg="#86967e",bg="#fffaf4").pack() 
-        userInf = Identity().userIdentity(1)#Loginstate().search)
+        cardid = Loginstate().search()
+        print("view")
+        print(cardid)
+        userInf = Identity().userIdentity(cardid)
         Label(self, text=('卡号:  '+str(userInf[0]["cardID"])),bg="#fffaf4").pack()
         Label(self, text=('姓名:  '+userInf[0]["username"]),bg="#fffaf4").pack()
         Label(self, text=('工作:  '+userInf[0]["userwork"]),bg="#fffaf4").pack()
-        Label(self, text=('ID:  '+userInf[0]["userid"]),bg="#fffaf4").pack()
+        Label(self, text=('用户名:  '+userInf[0]["userid"]),bg="#fffaf4").pack()
+        Label(self, text=('密码: 保密 '),bg="#fffaf4").pack()
         Entry(self, textvariable=self.password).pack()
         Button(self, text='更改密码', command=self.changepwd).pack()
 
+        Label(self, text='全部借阅记录', font=("华文行楷", 14), fg="#86967e",bg="#fffaf4").pack() 
         column = ['id', 'bno', 'title', 'cardID', 'username', 'lendDate', 'backDate']
         text_arr = ['编号','书籍编号','书名','借书证号','借阅人','借出时间','归还时间']
         self.tree = ttk.Treeview(self, show="headings", columns=column)
@@ -278,9 +283,9 @@ class AboutFrame(Frame): # 继承Frame类
             self.tree.column(column[i],width=100,anchor='center')
         self.tree.place(x=200,y=20,width=900,height=900)
         self.tree.pack()#一定要加这个pack，才能让表格显示出来
-        userid = Loginstate().search
+        userid = Loginstate().search()
         print(userid)
-        record_arr = Books().queryAllRecordbyId(1)
+        record_arr = Books().queryAllRecordbyId(userid)
 
         try:
             for record in record_arr:

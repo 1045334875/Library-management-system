@@ -1,8 +1,15 @@
-class Loginstate:
-    userID = 1
-
-    def update(self, id):
-        self.userID=id
+class Loginstate(object): 
+    userID:int
+    
 
     def search(self):
-        return self.userID        
+        global userID
+        return userID
+
+    def update(self, id):
+        global userID
+        userID=id
+        print(userID)
+        print("record")
+
+    
