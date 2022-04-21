@@ -31,7 +31,7 @@ class InputFrame(Frame): # 继承Frame类
         Entry(self, textvariable=self.title).grid(row=3, column=1, stick=E) 
         Label(self, text = '出版社: ',bg="#fffaf4").grid(row=4, stick=W, pady=10) 
         Entry(self, textvariable=self.press).grid(row=4, column=1, stick=E) 
-        Label(self, text = '出版日期: ',bg="#fffaf4").grid(row=5, stick=W, pady=10) 
+        Label(self, text = '出版年份: ',bg="#fffaf4").grid(row=5, stick=W, pady=10) 
         Entry(self, textvariable=self.year).grid(row=5, column=1, stick=E) 
         Label(self, text = '作者: ',bg="#fffaf4").grid(row=6, stick=W, pady=10) 
         Entry(self, textvariable=self.author).grid(row=6, column=1, stick=E) 
@@ -41,7 +41,8 @@ class InputFrame(Frame): # 继承Frame类
         Entry(self, textvariable=self.total).grid(row=8, column=1, stick=E) 
         Label(self, text = '在库数量: ',bg="#fffaf4").grid(row=9, stick=W, pady=10) 
         Entry(self, textvariable=self.stock).grid(row=9, column=1, stick=E) 
-        Button(self, text='录入', command=self.insertBook).grid(row=10, column=0, stick=E, pady=10) 
+        Button(self, text='录入', command=self.insertBook).grid(row=10, column=0, stick=E, pady=10)
+        Button(self, text='批量录入', command=self.insertBook).grid(row=10, column=0, stick=E, pady=10) 
 
     def insertBook(self):
         bno = self.bno.get() 

@@ -123,6 +123,26 @@ class Books:
         res_books = self.db.query_sql(sql)
         return res_books
 
+    def queryBookbyYear(self,name):
+        sql = f'select * from book where year="{name}" '
+        res_books = self.db.query_sql(sql)
+        return res_books
+
+    def queryBookbyPrice(self,minprice,maxprice):
+        if(maxprice==''):
+            sql = f'select * from book where price>="{int(minprice)}" '
+        elif(minprice==''):
+            sql = f'select * from book where price<="{int(maxprice)}" '
+        else:
+            sql = f'select * from book where price<="{int(maxprice)}" and price>="{int(minprice)}" '
+        res_books = self.db.query_sql(sql)
+        return res_books
+
+    def queryBookbyAll(self,title, press, author, category, minprice, maxprice):
+        sql = f'select * from book where title="{title}" and press="{press}" and author="{author}" and category="{category}" and price>="{minprice}" and price<="{maxprice}" '
+        res_books = self.db.query_sql(sql)
+        return res_books
+
     def lendBook(self,cardID, bno):
         sql = f'select id from lendrecord where cardID="{cardID}" and bno="{bno}" '
         lendid=0

@@ -21,21 +21,14 @@ class InputFrame(Frame): # 继承Frame类
         self.price = StringVar() 
         self.total= StringVar() 
         self.stock= StringVar() 
+        self.minprice = StringVar()
+        self.maxprice = StringVar()
         self.createPage() 
 
     def createPage(self): 
         self.configure(bg="#fffaf4") 
-        Label(self, text='查询图书', font=("华文行楷", 20), justify = CENTER , fg="#86967e",bg="#fffaf4").pack()
-        Label(self, text = '书籍类型: ',bg="#fffaf4").pack()
-        Entry(self, textvariable=self.category).pack()
-        Label(self, text = '书籍名称: ',bg="#fffaf4").pack()
-        Entry(self, textvariable=self.title).pack()
-        Label(self, text = '出版社: ',bg="#fffaf4").pack()
-        Entry(self, textvariable=self.press).pack()
-        Label(self, text = '作者: ',bg="#fffaf4").pack()
-        Entry(self, textvariable=self.author).pack()
-        Button(self, text='查询', command=self.checkBook).pack()
-
+        Label(self, text='查询图书', font=("华文行楷", 20), justify = CENTER , fg="#86967e",bg="#fffaf4").pack(side = TOP, expand = NO, fill = Y)
+        
         column = ['bno', 'category', 'title', 'press', 'year', 'author', 'price', 'total', 'stock']
         text_arr = ['编号','类型','书名','出版社','出版日期','作者','价格','总量','在库']
         self.tree = ttk.Treeview(self, show="headings", columns=column)
@@ -43,11 +36,35 @@ class InputFrame(Frame): # 继承Frame类
         #print the heading of book lists
         for i in range(len(column)):
             self.tree.heading(column[i], text=text_arr[i])
-            self.tree.column(column[i],width=100,anchor='center')
-        self.tree.place(x=200,y=200,width=900,height=900)
-        self.tree.pack()#一定要加这个pack，才能让表格显示出来
-        Button(self ,text='借阅图书',command=self.lendbook).pack()
+            self.tree.column(column[i],width=80,anchor='center')
+        #self.tree.place(x=200,y=200,width=600,height=1000)
+        self.tree.pack(side = RIGHT, expand = YES, fill=Y)#一定要加这个pack，才能让表格显示出来
+        
+        Label(self, text="          ",bg="#fffaf4").pack(side=BOTTOM)
+        Button(self ,text='借阅图书',command=self.lendbook).pack(side=BOTTOM)
+        Label(self, text="          ",bg="#fffaf4").pack(side=BOTTOM)
+        Button(self, text='满足任一条件查询', command=self.checkBook).pack(side=BOTTOM)
+        Label(self, text="          ",bg="#fffaf4").pack(side=BOTTOM)
+        Button(self, text='满足全部条件查询', command=self.check1Book).pack(side=BOTTOM)
+        Label(self, text="          ",bg="#fffaf4").pack(side=BOTTOM)
 
+        Label(self, text = '书籍类型: ',bg="#fffaf4").pack(side = TOP)
+        Entry(self, textvariable=self.category).pack(side = TOP)
+        Label(self, text = '书籍名称: ',bg="#fffaf4").pack(side = TOP)
+        Entry(self, textvariable=self.title).pack(side = TOP)
+        Label(self, text = '出版社: ',bg="#fffaf4").pack(side=TOP)
+        Entry(self, textvariable=self.press).pack(side=TOP)
+        Label(self, text = '作者: ',bg="#fffaf4").pack(side=TOP)
+        Entry(self, textvariable=self.author).pack(side=TOP)
+        Label(self, text = '出版年份: ',bg="#fffaf4").pack(side=TOP)
+        Entry(self, textvariable=self.year).pack(side=TOP)
+        Label(self, text = '价格区间: ',bg="#fffaf4").pack(side=TOP)
+        Label(self, text="      ",bg="#fffaf4").pack(side=LEFT)
+        Entry(self, textvariable=self.minprice).pack(side=LEFT)
+        Label(self, text = '~',bg="#fffaf4").pack(side=LEFT)
+        Entry(self, textvariable=self.maxprice).pack(side=LEFT)
+        Label(self, text="          ",bg="#fffaf4").pack(side=BOTTOM)
+        
 
     def addResult(self,book_arr):
         try:
@@ -103,16 +120,23 @@ class InputFrame(Frame): # 继承Frame类
         press = self.press.get()
         year = self.year.get()
         author = self.author.get()
-        price = self.price.get()
+        minprice = self.minprice.get()
+        maxprice = self.maxprice.get()
         total = self.total.get()
         stock = self.stock.get()
         if(title != ''):
             res=[]
             res = Books().queryBookbyName(title)
             self.addResult(res)
+
         if(press != ''):
             res=[]
             res = Books().queryBookbyPress(press)
+            self.addResult(res)
+
+        if(year != ''):
+            res=[]
+            res = Books().queryBookbyYear(year)
             self.addResult(res)
 
         if(author != ''):
@@ -124,6 +148,36 @@ class InputFrame(Frame): # 继承Frame类
             res=[]
             res = Books().queryBookbyCategory(category)
             self.addResult(res)
+
+        if(minprice != '' or maxprice != ''):
+            res=[]
+            res = Books().queryBookbyPrice(minprice,maxprice)
+            self.addResult(res)
+
+        print("Insert successful")
+
+    def check1Book(self):
+        x=self.tree.get_children()
+        for item in x:
+            self.tree.delete(item)
+        bno = self.bno.get() 
+        category = self.category.get() 
+        title = self.title.get()
+        press = self.press.get()
+        year = self.year.get()
+        author = self.author.get()
+        minprice = self.minprice.get()
+        maxprice = self.maxprice.get()
+        total = self.total.get()
+        stock = self.stock.get()
+        if(title=='' or press=='' or author=='' or category=='' or minprice=='' or maxprice==''):
+            showinfo('警告！',"请完成全部条件再查询")
+
+        else:
+            res=[]
+            res = Books().queryBookbyAll(title, press, author, category, minprice, maxprice)
+            self.addResult(res)
+
         print("Insert successful")
 
 #show all the lend record
